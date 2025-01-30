@@ -1,17 +1,20 @@
 IF EXISTS (SELECT * 
-		  FROM sys.objects 
-		  WHERE type = 'P' 
-		  AND name = 'BorrarClienteCMV')
+          FROM sys.objects 
+          WHERE type = 'P' 
+          AND name = 'BorrarClienteCMV')
 BEGIN
     DROP PROCEDURE BorrarClienteCMV
 END
 GO
 
 CREATE PROCEDURE BorrarClienteCMV
-	@IdCliente int = NULL
-   
+    @IdCliente int = NULL
 AS
 BEGIN
-	DELETE FROM TBL_CMV_CLIENTE
-        WHERE Id_Cliente = @IdCliente
+
+    DELETE FROM TBL_CMV_CLIENTE_CUENTA
+    WHERE Id_Cliente = @IdCliente;
+    
+    DELETE FROM TBL_CMV_CLIENTE
+    WHERE Id_Cliente = @IdCliente;
 END
