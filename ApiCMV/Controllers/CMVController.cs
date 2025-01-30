@@ -47,12 +47,14 @@ namespace ApiCMV.Controllers
                 }
 
                 var result = await _context.Database.ExecuteSqlRawAsync(
-                    "EXEC InsertaClientesCMV @Nombre, @ApellidoP, @ApellidoM, @RFC, @CURP",
+                    "EXEC InsertaClientesCMV @Nombre, @ApellidoP, @ApellidoM, @RFC, @CURP, @NombreCuenta, @Saldo",
                     new SqlParameter("@Nombre", cliente.Nombre ?? (object)DBNull.Value),
                     new SqlParameter("@ApellidoP", cliente.Apellido_Paterno ?? (object)DBNull.Value),
                     new SqlParameter("@ApellidoM", cliente.Apellido_Materno ?? (object)DBNull.Value),
                     new SqlParameter("@RFC", cliente.RFC ?? (object)DBNull.Value),
-                    new SqlParameter("@CURP", cliente.CURP ?? (object)DBNull.Value)
+                    new SqlParameter("@CURP", cliente.CURP ?? (object)DBNull.Value),
+                    new SqlParameter("@NombreCuenta", cliente.NombreCuenta ?? (object)DBNull.Value),
+                    new SqlParameter("@Saldo", cliente.Saldo)
                 );
 
                 return Ok(new { mensaje = "Cliente insertado correctamente." });
@@ -75,13 +77,15 @@ namespace ApiCMV.Controllers
                 }
 
                 var result = await _context.Database.ExecuteSqlRawAsync(
-                    "EXEC EditarClienteCMV @IdCliente, @Nombre, @ApellidoP, @ApellidoM, @RFC, @CURP",
+                    "EXEC EditarClienteCMV @IdCliente, @Nombre, @ApellidoP, @ApellidoM, @RFC, @CURP, @NombreCuenta, @Saldo",
                     new SqlParameter("@IdCliente", cliente.Id_Cliente),
                     new SqlParameter("@Nombre", (object)cliente.Nombre ?? DBNull.Value),
                     new SqlParameter("@ApellidoP", (object)cliente.Apellido_Paterno ?? DBNull.Value),
                     new SqlParameter("@ApellidoM", (object)cliente.Apellido_Materno ?? DBNull.Value),
                     new SqlParameter("@RFC", (object)cliente.RFC ?? DBNull.Value),
-                    new SqlParameter("@CURP", (object)cliente.CURP ?? DBNull.Value)
+                    new SqlParameter("@CURP", (object)cliente.CURP ?? DBNull.Value),
+                    new SqlParameter("@NombreCuenta", cliente.NombreCuenta ?? (object)DBNull.Value),
+                    new SqlParameter("@Saldo", cliente.Saldo)
                 );
 
                 return Ok(new { mensaje = "Cliente editado correctamente." });
@@ -116,6 +120,22 @@ namespace ApiCMV.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("ClienteCuentas")]
+        public async Task<IActionResult> ClienteCuentas()
+        {
+            try
+            {
+                var clientes = await _context.CuentasCliente
+                    .FromSqlRaw("EXEC CuentasClientesCMV")
+                    .ToListAsync();
 
+                return StatusCode(StatusCodes.Status200OK, new { response = clientes });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { mensaje = ex.Message });
+            }
+        }
     }
 }

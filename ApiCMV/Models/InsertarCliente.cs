@@ -7,5 +7,7 @@
         public string Apellido_Materno { get; set; }
         public string RFC { get; set; }
         public string CURP { get; set; }
+        public string NombreCuenta { get; set; }
+        public decimal Saldo { get; set; }
     }
 }
