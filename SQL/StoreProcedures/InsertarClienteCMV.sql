@@ -1,13 +1,13 @@
 IF EXISTS (SELECT * 
 		  FROM sys.objects 
 		  WHERE type = 'P' 
-		  AND name = 'InsertaClienteCMV')
+		  AND name = 'InsertaClientesCMV')
 BEGIN
-    DROP PROCEDURE InsertaClienteCMV
+    DROP PROCEDURE InsertaClientesCMV
 END
 GO
 
-CREATE PROCEDURE InsertaClienteCMV
+CREATE PROCEDURE InsertaClientesCMV
 	@Nombre varchar(40) = NULL,
 	@ApellidoP varchar(30) = NULL,
 	@ApellidoM varchar(30) = NULL,
